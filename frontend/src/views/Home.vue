@@ -4,74 +4,43 @@
     <div class="mobile-layout" v-if="isMobileDevice">
       <van-nav-bar title="BSCM - AI智能诊断" fixed />
       <div class="mobile-content">
-        <van-card class="welcome-card-mobile">
-          <template #title>
-            <h2>欢迎使用AI智能诊断系统</h2>
-          </template>
-          <template #desc>
-            <p>基于先进的人工智能技术，为您提供专业的诊断服务</p>
-          </template>
-          <template #footer>
-            <van-button type="primary" size="large" block @click="goToDiagnosis">
-              开始诊断
-            </van-button>
-          </template>
-        </van-card>
+        <!-- Hero区域 -->
+        <div class="mobile-hero">
+          <h2 class="mobile-hero-title">智能医疗诊断</h2>
+          <p class="mobile-hero-desc">让健康触手可及</p>
+          <van-button type="primary" size="large" block class="mobile-hero-button" @click="goToDiagnosis">
+            立即开始诊断
+          </van-button>
+        </div>
         
-        <van-grid :column-num="3" :gutter="10" class="feature-grid">
-          <van-grid-item>
-            <van-icon name="description" size="30" />
-            <p>智能分析</p>
-          </van-grid-item>
-          <van-grid-item>
-            <van-icon name="chart-trending-o" size="30" />
-            <p>快速诊断</p>
-          </van-grid-item>
-          <van-grid-item>
-            <van-icon name="folder-o" size="30" />
-            <p>历史记录</p>
-          </van-grid-item>
-        </van-grid>
       </div>
     </div>
     
     <!-- 桌面端布局 -->
     <el-container class="desktop-layout" v-else>
-      <el-header>
-        <h1>BSCM - AI智能诊断</h1>
+      <el-header class="header-section">
+        <div class="header-content">
+          <div class="logo-section">
+            <div class="logo-icon">BSCM</div>
+            <h1>AI智能诊断系统</h1>
+          </div>
+          <div class="header-subtitle">基于先进AI技术，提供专业医疗诊断服务</div>
+        </div>
       </el-header>
-      <el-main>
-        <el-card class="welcome-card">
-          <h2>欢迎使用AI智能诊断系统</h2>
-          <p>基于先进的人工智能技术，为您提供专业的诊断服务</p>
-          <el-button type="primary" size="large" @click="goToDiagnosis">
-            开始诊断
-          </el-button>
-        </el-card>
-        
-        <el-row :gutter="20" class="feature-cards">
-          <el-col :span="8">
-            <el-card shadow="hover">
-              <el-icon :size="40"><Document /></el-icon>
-              <h3>智能分析</h3>
-              <p>基于AI算法进行深度分析</p>
-            </el-card>
-          </el-col>
-          <el-col :span="8">
-            <el-card shadow="hover">
-              <el-icon :size="40"><DataAnalysis /></el-icon>
-              <h3>快速诊断</h3>
-              <p>快速生成诊断报告</p>
-            </el-card>
-          </el-col>
-          <el-col :span="8">
-            <el-card shadow="hover">
-              <el-icon :size="40"><FolderOpened /></el-icon>
-              <h3>历史记录</h3>
-              <p>查看历史诊断记录</p>
-            </el-card>
-          </el-col>
-        </el-row>
+      <el-main class="main-section">
+        <!-- Hero区域 -->
+        <div class="hero-section">
+          <div class="hero-content">
+            <h2 class="hero-title">智能医疗诊断，让健康触手可及</h2>
+            <p class="hero-description">
+              采用最新的人工智能技术，结合专业医疗知识库，为您提供准确、快速的诊断建议
+            </p>
+            <el-button type="primary" size="large" class="hero-button" @click="goToDiagnosis">
+              <el-icon><Document /></el-icon>
+              立即开始诊断
+            </el-button>
+          </div>
+        </div>
       </el-main>
     </el-container>
   </div>
@@ -80,7 +49,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { Document, DataAnalysis, FolderOpened } from '@element-plus/icons-vue'
+import { Document } from '@element-plus/icons-vue'
 import { isMobile } from '../utils/mobile'
 
 const router = useRouter()
@@ -98,104 +67,158 @@ const goToDiagnosis = () => {
 <style scoped>
 .home {
   min-height: 100vh;
+  background: var(--background-color);
 }
 
-/* 移动端样式 */
+/* ========== 移动端样式 ========== */
 .mobile-layout {
-  padding-top: 46px; /* 导航栏高度 */
+  padding-top: 46px;
   padding-bottom: env(safe-area-inset-bottom);
-}
-
-.mobile-content {
-  padding: 0.4rem;
-}
-
-.welcome-card-mobile {
-  margin-bottom: 0.4rem;
-  border-radius: 0.2rem;
-}
-
-.welcome-card-mobile h2 {
-  font-size: 0.48rem;
-  margin-bottom: 0.2rem;
-  color: #323233;
-}
-
-.welcome-card-mobile p {
-  font-size: 0.28rem;
-  color: #969799;
-  margin-bottom: 0.3rem;
-}
-
-.feature-grid {
-  margin-top: 0.4rem;
-}
-
-.feature-grid p {
-  font-size: 0.24rem;
-  margin-top: 0.2rem;
-  color: #646566;
-}
-
-/* 桌面端样式 */
-.desktop-layout {
+  background: var(--background-color);
   min-height: 100vh;
 }
 
-.el-header {
-  background-color: #409eff;
+.mobile-content {
+  padding: 0.3rem;
+}
+
+/* 移动端Hero区域 */
+.mobile-hero {
+  background: var(--primary-gradient);
+  border-radius: 0.3rem;
+  padding: 0.6rem 0.4rem;
+  margin-bottom: 0.4rem;
+  text-align: center;
   color: white;
+}
+
+.mobile-hero-title {
+  font-size: 0.56rem;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+  color: white;
+}
+
+.mobile-hero-desc {
+  font-size: 0.28rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 0.4rem;
+}
+
+.mobile-hero-button {
+  margin-top: 0.3rem;
+  border-radius: 0.2rem;
+  font-weight: 500;
+}
+
+/* ========== 桌面端样式 ========== */
+.desktop-layout {
+  min-height: 100vh;
+  background: var(--background-color);
+}
+
+/* 头部区域 */
+.header-section {
+  background: var(--primary-gradient);
+  color: white;
+  padding: 0;
+  box-shadow: 0 2px 12px var(--shadow-color);
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  text-align: center;
+}
+
+.logo-section {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 12px;
+  margin-bottom: 8px;
 }
 
-.el-header h1 {
+.logo-icon {
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.header-content h1 {
   margin: 0;
-  font-size: 24px;
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: 0;
 }
 
-.el-main {
-  padding: 40px;
-}
-
-.welcome-card {
-  text-align: center;
-  margin-bottom: 40px;
-  padding: 40px;
-}
-
-.welcome-card h2 {
-  margin-bottom: 20px;
-  color: #303133;
-}
-
-.welcome-card p {
-  margin-bottom: 30px;
-  color: #606266;
-  font-size: 16px;
-}
-
-.feature-cards {
-  margin-top: 40px;
-}
-
-.feature-cards .el-card {
-  text-align: center;
-  padding: 30px 20px;
-}
-
-.feature-cards h3 {
-  margin: 20px 0 10px;
-  color: #303133;
-}
-
-.feature-cards p {
-  color: #909399;
+.header-subtitle {
   font-size: 14px;
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: 6px;
+  font-weight: 400;
 }
 
-/* 响应式 */
+/* 主内容区域 */
+.main-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Hero区域 */
+.hero-section {
+  background: white;
+  border-radius: 8px;
+  padding: 48px 32px;
+  margin-bottom: 40px;
+  border: 1px solid var(--border-color);
+  text-align: center;
+}
+
+.hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hero-title {
+  font-size: 32px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+
+.hero-description {
+  font-size: 16px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+.hero-button {
+  padding: 12px 32px;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.hero-button:hover {
+  background-color: var(--primary-dark);
+}
+
+/* ========== 响应式 ========== */
 @media screen and (max-width: 768px) {
   .desktop-layout {
     display: none;
@@ -205,6 +228,34 @@ const goToDiagnosis = () => {
 @media screen and (min-width: 769px) {
   .mobile-layout {
     display: none;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .main-section {
+    padding: 32px 20px;
+  }
+  
+  .hero-title {
+    font-size: 28px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .main-section {
+    padding: 24px 16px;
+  }
+  
+  .hero-section {
+    padding: 32px 20px;
+  }
+  
+  .hero-title {
+    font-size: 24px;
+  }
+  
+  .hero-description {
+    font-size: 14px;
   }
 }
 </style>

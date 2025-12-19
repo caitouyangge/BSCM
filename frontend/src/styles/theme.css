@@ -1,0 +1,160 @@
+/* 薰衣草紫色主题变量 - 舒缓柔和的配色 */
+:root {
+  --primary-color: #9678d9;
+  --primary-light: #b19cd9;
+  --primary-dark: #7b68d9;
+  --primary-lighter: #d4c4e8;
+  --primary-gradient: linear-gradient(135deg, #9678d9 0%, #b19cd9 50%, #d4c4e8 100%);
+  --primary-gradient-subtle: linear-gradient(135deg, rgba(150, 120, 217, 0.1) 0%, rgba(177, 156, 217, 0.05) 100%);
+  --background-color: #f5f2ff;
+  --background-light: #faf9ff;
+  --text-primary: #3d2d5a;
+  --text-secondary: #6b5b8a;
+  --border-color: #e6d9f2;
+  --shadow-color: rgba(150, 120, 217, 0.12);
+  --shadow-hover: rgba(150, 120, 217, 0.2);
+}
+
+/* Element Plus 主题覆盖 */
+.el-button--primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.el-button--primary:hover {
+  background-color: var(--primary-light);
+  border-color: var(--primary-light);
+}
+
+.el-button--primary:active {
+  background-color: var(--primary-dark);
+  border-color: var(--primary-dark);
+}
+
+.el-card {
+  border-color: var(--border-color);
+}
+
+.el-card:hover {
+  border-color: var(--primary-color);
+}
+
+.el-page-header__content {
+  color: white;
+}
+
+.el-page-header__left {
+  color: white;
+}
+
+.el-page-header__left:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Vant 主题覆盖 */
+.van-button--primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.van-button--primary:active {
+  background-color: var(--primary-dark);
+  border-color: var(--primary-dark);
+}
+
+.van-nav-bar {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.van-nav-bar__title {
+  color: white;
+}
+
+.van-nav-bar__arrow {
+  color: white;
+}
+
+.van-nav-bar__arrow:active {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.van-card {
+  background-color: white;
+  border-radius: 8px;
+}
+
+.van-cell-group {
+  background-color: white;
+}
+
+.van-cell {
+  color: var(--text-primary);
+}
+
+.van-cell__title {
+  color: var(--text-primary);
+}
+
+.van-cell__label {
+  color: var(--text-secondary);
+}
+
+/* 卡片和容器样式 */
+.primary-card {
+  background: var(--primary-color);
+  color: white;
+}
+
+.primary-border {
+  border-color: var(--primary-color);
+}
+
+/* 链接样式 */
+a {
+  color: var(--primary-color);
+}
+
+a:hover {
+  color: var(--primary-light);
+}
+
+/* 输入框焦点样式 */
+.el-input__inner:focus,
+.el-textarea__inner:focus,
+.van-field__control:focus {
+  border-color: var(--primary-color);
+}
+
+/* 表格样式 */
+.el-table th {
+  background-color: var(--background-light);
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.el-table--border {
+  border-color: var(--border-color);
+}
+
+.el-table td,
+.el-table th {
+  border-color: var(--border-color);
+}
+
+/* 全局布局优化 */
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* 桌面端容器居中 */
+@media screen and (min-width: 769px) {
+  .desktop-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+}
+

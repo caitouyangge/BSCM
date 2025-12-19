@@ -109,7 +109,7 @@ const goBack = () => {
 .mobile-layout {
   padding-top: 46px;
   padding-bottom: env(safe-area-inset-bottom);
-  background-color: #f7f8fa;
+  background-color: var(--background-color);
   min-height: 100vh;
 }
 
@@ -128,17 +128,32 @@ const goBack = () => {
 }
 
 .el-header {
-  background-color: #fff;
-  border-bottom: 1px solid #e4e7ed;
+  background: var(--primary-gradient);
+  color: white;
+  border-bottom: none;
   display: flex;
   align-items: center;
-  padding: 0 20px;
+  padding: 0 24px;
+  box-shadow: 0 2px 8px var(--shadow-color);
 }
 
 .el-main {
-  padding: 20px;
+  padding: 24px;
   max-width: 1200px;
   margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.el-card {
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+.el-card:hover {
+  border-color: var(--border-color);
+  box-shadow: 0 2px 8px var(--shadow-color);
 }
 
 /* 响应式 */
@@ -146,11 +161,25 @@ const goBack = () => {
   .desktop-layout {
     display: none;
   }
+  
+  .el-main {
+    padding: 16px;
+  }
 }
 
 @media screen and (min-width: 769px) {
   .mobile-layout {
     display: none;
+  }
+  
+  .el-main {
+    padding: 24px;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .el-main {
+    padding: 24px 32px;
   }
 }
 </style>

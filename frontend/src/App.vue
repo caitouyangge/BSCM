@@ -10,6 +10,7 @@
 
 <style>
 @import './styles/mobile.css';
+@import './styles/theme.css';
 
 * {
   margin: 0;
@@ -22,10 +23,17 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-color: var(--background-color);
   width: 100%;
   max-width: 100vw;
   overflow-x: hidden;
+}
+
+/* 桌面端布局优化 */
+@media screen and (min-width: 769px) {
+  #app {
+    background-color: var(--background-color);
+  }
 }
 
 /* 移动端适配 */
