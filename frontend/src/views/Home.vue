@@ -249,7 +249,7 @@ const goToDiagnosis = () => {
 }
 
 .nav-item:hover {
-  background-color: rgba(64, 158, 255, 0.1);
+  background-color: var(--primary-gradient-subtle);
   color: var(--primary-color);
 }
 
