@@ -1,45 +1,7 @@
 <template>
   <div class="profile">
-    <!-- 移动端布局 -->
-    <div class="mobile-layout" v-if="isMobileDevice">
-      <van-nav-bar
-        title="个人中心"
-        left-arrow
-        @click-left="goBack"
-        fixed
-      />
-      <div class="mobile-content">
-        <van-cell-group inset>
-          <van-field
-            v-model="userInfo.username"
-            label="用户名"
-            placeholder="请输入用户名"
-          />
-          <van-field
-            v-model="userInfo.email"
-            label="邮箱"
-            placeholder="请输入邮箱"
-            type="email"
-          />
-          <van-field
-            v-model="userInfo.phone"
-            label="手机号"
-            placeholder="请输入手机号"
-            type="tel"
-          />
-        </van-cell-group>
-        
-        <div class="button-group">
-          <van-button type="primary" size="large" block @click="saveProfile">
-            保存
-          </van-button>
-        </div>
-      </div>
-    </div>
-    
-    <!-- 桌面端布局 -->
-    <el-container class="desktop-layout" v-else>
-      <el-header>
+    <el-container class="profile-layout">
+      <el-header class="header-section">
         <el-page-header @back="goBack">
           <template #content>
             <span class="text-large font-600 mr-3">个人中心</span>
@@ -48,18 +10,35 @@
       </el-header>
       <el-main>
         <el-card>
-          <el-form :model="userInfo" label-width="120px">
+          <el-form :model="userInfo" :label-width="labelWidth">
             <el-form-item label="用户名">
-              <el-input v-model="userInfo.username" />
+              <el-input
+                v-model="userInfo.username"
+                placeholder="请输入用户名"
+              />
             </el-form-item>
             <el-form-item label="邮箱">
-              <el-input v-model="userInfo.email" />
+              <el-input
+                v-model="userInfo.email"
+                type="email"
+                placeholder="请输入邮箱"
+              />
             </el-form-item>
             <el-form-item label="手机号">
-              <el-input v-model="userInfo.phone" />
+              <el-input
+                v-model="userInfo.phone"
+                type="tel"
+                placeholder="请输入手机号"
+              />
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="saveProfile">保存</el-button>
+              <el-button
+                type="danger"
+                @click="handleLogout"
+                style="margin-left: 10px"
+                >退出登录</el-button
+              >
             </el-form-item>
           </el-form>
         </el-card>
@@ -69,35 +48,60 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
-import { showToast } from 'vant'
-import { isMobile } from '../utils/mobile'
+import { ref, onMounted, computed } from "vue";
+import { useRouter } from "vue-router";
+import { useUserStore } from "../stores/user";
+import { ElMessage, ElMessageBox } from "element-plus";
 
-const router = useRouter()
-const isMobileDevice = ref(false)
+const router = useRouter();
+const userStore = useUserStore();
 const userInfo = ref({
-  username: '用户',
-  email: '',
-  phone: ''
-})
+  username: "",
+  email: "",
+  phone: "",
+});
+
+// 响应式标签宽度
+const labelWidth = computed(() => {
+  return window.innerWidth <= 768 ? "80px" : "120px";
+});
 
 onMounted(() => {
-  isMobileDevice.value = isMobile()
-})
+  // 加载用户信息
+  if (userStore.userInfo) {
+    userInfo.value = {
+      username: userStore.userInfo.username || "",
+      email: userStore.userInfo.email || "",
+      phone: userStore.userInfo.phone || "",
+    };
+  }
+});
 
 const saveProfile = () => {
-  if (isMobileDevice.value) {
-    showToast.success('保存成功')
-  } else {
-    ElMessage.success('保存成功')
+  ElMessage.success("保存成功");
+};
+
+const handleLogout = async () => {
+  try {
+    await ElMessageBox.confirm("确定要退出登录吗？", "确认退出", {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning",
+    });
+
+    userStore.logout();
+    ElMessage.success("已退出登录");
+    router.push("/login");
+  } catch (error) {
+    if (error !== "cancel") {
+      console.error(error);
+    }
   }
-}
+};
 
 const goBack = () => {
-  router.push('/')
-}
+  router.push("/");
+};
 </script>
 
 <style scoped>
@@ -105,25 +109,7 @@ const goBack = () => {
   min-height: 100vh;
 }
 
-/* 移动端样式 */
-.mobile-layout {
-  padding-top: 46px;
-  padding-bottom: env(safe-area-inset-bottom);
-  background-color: var(--background-color);
-  min-height: 100vh;
-}
-
-.mobile-content {
-  padding: 0.3rem;
-}
-
-.button-group {
-  margin-top: 0.4rem;
-  padding: 0 0.3rem;
-}
-
-/* 桌面端样式 */
-.desktop-layout {
+.profile-layout {
   min-height: 100vh;
 }
 
@@ -158,22 +144,16 @@ const goBack = () => {
 
 /* 响应式 */
 @media screen and (max-width: 768px) {
-  .desktop-layout {
-    display: none;
+  .el-header {
+    padding: 0 16px;
   }
-  
+
   .el-main {
     padding: 16px;
   }
-}
 
-@media screen and (min-width: 769px) {
-  .mobile-layout {
-    display: none;
-  }
-  
-  .el-main {
-    padding: 24px;
+  .el-card {
+    border-radius: 12px;
   }
 }
 
