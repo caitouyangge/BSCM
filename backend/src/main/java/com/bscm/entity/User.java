@@ -13,36 +13,39 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class User {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @Column(name = "username", length = 50)
-  private String username;
+    @Column(name = "username", unique = true, nullable = false, length = 50)
+    private String username;
 
-  @Column(name = "email", length = 100)
-  private String email;
+    @Column(name = "email", unique = true, nullable = false, length = 100)
+    private String email;
 
-  @Column(name = "password", nullable = false)
-  private String password;
+    @Column(name = "password", nullable = false)
+    private String password;
 
-  @Column(name = "phone", unique = true, nullable = false, length = 20)
-  private String phone;
+    @Column(name = "phone", length = 20)
+    private String phone;
 
-  @Column(name = "created_at", nullable = false, updatable = false)
-  private LocalDateTime createdAt;
+    @Column(name = "role", nullable = false, length = 20)
+    private String role;
 
-  @Column(name = "updated_at")
-  private LocalDateTime updatedAt;
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
-  @PrePersist
-  protected void onCreate() {
-    createdAt = LocalDateTime.now();
-    updatedAt = LocalDateTime.now();
-  }
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
-  @PreUpdate
-  protected void onUpdate() {
-    updatedAt = LocalDateTime.now();
-  }
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 }
