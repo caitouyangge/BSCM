@@ -9,8 +9,8 @@
 </script>
 
 <style>
-@import './styles/mobile.css';
-@import './styles/theme.css';
+@import "./styles/mobile.css";
+@import "./styles/theme.css";
 
 * {
   margin: 0;
@@ -19,7 +19,9 @@
 }
 
 #app {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
@@ -43,4 +45,3 @@
   }
 }
 </style>
-

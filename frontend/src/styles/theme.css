@@ -4,8 +4,17 @@
   --primary-light: #b19cd9;
   --primary-dark: #7b68d9;
   --primary-lighter: #d4c4e8;
-  --primary-gradient: linear-gradient(135deg, #9678d9 0%, #b19cd9 50%, #d4c4e8 100%);
-  --primary-gradient-subtle: linear-gradient(135deg, rgba(150, 120, 217, 0.1) 0%, rgba(177, 156, 217, 0.05) 100%);
+  --primary-gradient: linear-gradient(
+    135deg,
+    #9678d9 0%,
+    #b19cd9 50%,
+    #d4c4e8 100%
+  );
+  --primary-gradient-subtle: linear-gradient(
+    135deg,
+    rgba(150, 120, 217, 0.1) 0%,
+    rgba(177, 156, 217, 0.05) 100%
+  );
   --background-color: #f5f2ff;
   --background-light: #faf9ff;
   --text-primary: #3d2d5a;
@@ -157,4 +166,3 @@ body {
     padding: 0 24px;
   }
 }
-

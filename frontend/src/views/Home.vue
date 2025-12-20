@@ -1,30 +1,15 @@
 <template>
   <div class="home">
-    <!-- 移动端布局 -->
-    <div class="mobile-layout" v-if="isMobileDevice">
-      <van-nav-bar title="BSCM - AI智能诊断" fixed />
-      <div class="mobile-content">
-        <!-- Hero区域 -->
-        <div class="mobile-hero">
-          <h2 class="mobile-hero-title">智能医疗诊断</h2>
-          <p class="mobile-hero-desc">让健康触手可及</p>
-          <van-button type="primary" size="large" block class="mobile-hero-button" @click="goToDiagnosis">
-            立即开始诊断
-          </van-button>
-        </div>
-        
-      </div>
-    </div>
-    
-    <!-- 桌面端布局 -->
-    <el-container class="desktop-layout" v-else>
+    <el-container class="home-layout">
       <el-header class="header-section">
         <div class="header-content">
           <div class="logo-section">
             <div class="logo-icon">BSCM</div>
             <h1>AI智能诊断系统</h1>
           </div>
-          <div class="header-subtitle">基于先进AI技术，提供专业医疗诊断服务</div>
+          <div class="header-subtitle">
+            基于先进AI技术，提供专业医疗诊断服务
+          </div>
         </div>
       </el-header>
       <el-main class="main-section">
@@ -35,7 +20,12 @@
             <p class="hero-description">
               采用最新的人工智能技术，结合专业医疗知识库，为您提供准确、快速的诊断建议
             </p>
-            <el-button type="primary" size="large" class="hero-button" @click="goToDiagnosis">
+            <el-button
+              type="primary"
+              size="large"
+              class="hero-button"
+              @click="goToDiagnosis"
+            >
               <el-icon><Document /></el-icon>
               立即开始诊断
             </el-button>
@@ -47,21 +37,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { Document } from '@element-plus/icons-vue'
-import { isMobile } from '../utils/mobile'
+import { useRouter } from "vue-router";
+import { Document } from "@element-plus/icons-vue";
 
-const router = useRouter()
-const isMobileDevice = ref(false)
-
-onMounted(() => {
-  isMobileDevice.value = isMobile()
-})
+const router = useRouter();
 
 const goToDiagnosis = () => {
-  router.push('/diagnosis')
-}
+  router.push("/diagnosis");
+};
 </script>
 
 <style scoped>
@@ -70,49 +53,7 @@ const goToDiagnosis = () => {
   background: var(--background-color);
 }
 
-/* ========== 移动端样式 ========== */
-.mobile-layout {
-  padding-top: 46px;
-  padding-bottom: env(safe-area-inset-bottom);
-  background: var(--background-color);
-  min-height: 100vh;
-}
-
-.mobile-content {
-  padding: 0.3rem;
-}
-
-/* 移动端Hero区域 */
-.mobile-hero {
-  background: var(--primary-gradient);
-  border-radius: 0.3rem;
-  padding: 0.6rem 0.4rem;
-  margin-bottom: 0.4rem;
-  text-align: center;
-  color: white;
-}
-
-.mobile-hero-title {
-  font-size: 0.56rem;
-  font-weight: 600;
-  margin-bottom: 0.2rem;
-  color: white;
-}
-
-.mobile-hero-desc {
-  font-size: 0.28rem;
-  color: rgba(255, 255, 255, 0.9);
-  margin-bottom: 0.4rem;
-}
-
-.mobile-hero-button {
-  margin-top: 0.3rem;
-  border-radius: 0.2rem;
-  font-weight: 500;
-}
-
-/* ========== 桌面端样式 ========== */
-.desktop-layout {
+.home-layout {
   min-height: 100vh;
   background: var(--background-color);
 }
@@ -219,43 +160,54 @@ const goToDiagnosis = () => {
 }
 
 /* ========== 响应式 ========== */
-@media screen and (max-width: 768px) {
-  .desktop-layout {
-    display: none;
-  }
-}
-
-@media screen and (min-width: 769px) {
-  .mobile-layout {
-    display: none;
-  }
-}
-
 @media screen and (max-width: 1024px) {
   .main-section {
     padding: 32px 20px;
   }
-  
+
   .hero-title {
     font-size: 28px;
   }
 }
 
 @media screen and (max-width: 768px) {
+  .header-content {
+    padding: 24px 16px;
+  }
+
+  .header-content h1 {
+    font-size: 22px;
+  }
+
+  .header-subtitle {
+    font-size: 13px;
+  }
+
+  .logo-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+
   .main-section {
     padding: 24px 16px;
   }
-  
+
   .hero-section {
     padding: 32px 20px;
+    border-radius: 12px;
   }
-  
+
   .hero-title {
     font-size: 24px;
   }
-  
+
   .hero-description {
     font-size: 14px;
+  }
+
+  .hero-button {
+    width: 100%;
   }
 }
 </style>

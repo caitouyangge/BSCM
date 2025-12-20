@@ -1,33 +1,68 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../views/Home.vue'
+import { createRouter, createWebHistory } from "vue-router";
+import Home from "../views/Home.vue";
+import { useUserStore } from "../stores/user";
 
 const routes = [
   {
-    path: '/',
-    name: 'Home',
-    component: Home
+    path: "/",
+    name: "Home",
+    component: Home,
   },
   {
-    path: '/diagnosis',
-    name: 'Diagnosis',
-    component: () => import('../views/Diagnosis.vue')
+    path: "/login",
+    name: "Login",
+    component: () => import("../views/Login.vue"),
   },
   {
-    path: '/history',
-    name: 'History',
-    component: () => import('../views/History.vue')
+    path: "/register",
+    name: "Register",
+    component: () => import("../views/Register.vue"),
   },
   {
-    path: '/profile',
-    name: 'Profile',
-    component: () => import('../views/Profile.vue')
-  }
-]
+    path: "/diagnosis",
+    name: "Diagnosis",
+    component: () => import("../views/Diagnosis.vue"),
+  },
+  {
+    path: "/history",
+    name: "History",
+    component: () => import("../views/History.vue"),
+  },
+  {
+    path: "/profile",
+    name: "Profile",
+    component: () => import("../views/Profile.vue"),
+  },
+];
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
-})
+  routes,
+});
 
-export default router
+// 路由守卫：检查登录状态
+router.beforeEach((to, from, next) => {
+  const userStore = useUserStore();
+  const token = userStore.token || localStorage.getItem("token");
 
+  // 公开路由，不需要登录
+  const publicRoutes = ["/login", "/register"];
+
+  if (publicRoutes.includes(to.path)) {
+    // 如果已登录，跳转到首页
+    if (token) {
+      next("/");
+    } else {
+      next();
+    }
+  } else {
+    // 需要登录的路由
+    if (token) {
+      next();
+    } else {
+      next("/login");
+    }
+  }
+});
+
+export default router;

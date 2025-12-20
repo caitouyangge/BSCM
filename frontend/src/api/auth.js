@@ -44,35 +44,34 @@ api.interceptors.response.use(
   },
 );
 
-export const diagnosisApi = {
-  // 提交诊断
-  submitDiagnosis: async (data) => {
-    const formData = new FormData();
-    formData.append("symptoms", data.symptoms);
-    if (data.images) {
-      data.images.forEach((image, index) => {
-        formData.append(`images`, image);
-      });
-    }
-    return await api.post("/diagnosis/submit", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+export const authApi = {
+  // 发送验证码
+  sendCode: async (phone) => {
+    return await api.post("/auth/send-code", { phone });
+  },
+
+  // 用户注册
+  register: async (phone, password, verificationCode) => {
+    return await api.post("/auth/register", {
+      phone,
+      password,
+      verificationCode,
     });
   },
 
-  // 获取诊断历史
-  getHistory: async () => {
-    return await api.get("/diagnosis/history");
+  // 用户登录
+  login: async (phone, password) => {
+    return await api.post("/auth/login", {
+      phone,
+      password,
+    });
   },
 
-  // 删除记录
-  deleteRecord: async (id) => {
-    return await api.delete(`/diagnosis/${id}`);
-  },
-
-  // 获取诊断详情
-  getDetail: async (id) => {
-    return await api.get(`/diagnosis/${id}`);
+  // 一键登录（验证码登录）
+  quickLogin: async (phone, verificationCode) => {
+    return await api.post("/auth/quick-login", {
+      phone,
+      verificationCode,
+    });
   },
 };

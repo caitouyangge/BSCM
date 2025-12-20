@@ -1,41 +1,7 @@
 <template>
   <div class="history">
-    <!-- 移动端布局 -->
-    <div class="mobile-layout" v-if="isMobileDevice">
-      <van-nav-bar
-        title="诊断历史"
-        left-arrow
-        @click-left="goBack"
-        fixed
-      />
-      <div class="mobile-content">
-        <van-list
-          v-model:loading="loading"
-          :finished="finished"
-          finished-text="没有更多了"
-          @load="loadHistory"
-        >
-          <van-cell-group inset>
-            <van-cell
-              v-for="item in historyList"
-              :key="item.id"
-              :title="item.symptoms"
-              :label="item.date"
-              is-link
-              @click="viewDetail(item)"
-            >
-              <template #right-icon>
-                <van-icon name="delete" @click.stop="deleteRecord(item)" />
-              </template>
-            </van-cell>
-          </van-cell-group>
-        </van-list>
-      </div>
-    </div>
-    
-    <!-- 桌面端布局 -->
-    <el-container class="desktop-layout" v-else>
-      <el-header>
+    <el-container class="history-layout">
+      <el-header class="header-section">
         <el-page-header @back="goBack">
           <template #content>
             <span class="text-large font-600 mr-3">诊断历史</span>
@@ -43,100 +9,140 @@
         </el-page-header>
       </el-header>
       <el-main>
-        <el-table :data="historyList" style="width: 100%">
+        <el-card v-if="historyList.length === 0 && !loading" class="empty-card">
+          <el-empty description="暂无诊断记录" />
+        </el-card>
+
+        <!-- 移动端卡片布局 -->
+        <div class="mobile-list" v-if="historyList.length > 0">
+          <el-card
+            v-for="item in historyList"
+            :key="item.id"
+            class="history-card"
+            shadow="hover"
+          >
+            <div class="card-content">
+              <div class="card-header-mobile">
+                <span class="date-text">{{ item.date }}</span>
+                <el-button
+                  type="danger"
+                  size="small"
+                  :icon="Delete"
+                  circle
+                  @click="deleteRecord(item)"
+                />
+              </div>
+              <div class="symptoms-text" @click="viewDetail(item)">
+                {{ item.symptoms }}
+              </div>
+              <div class="card-footer">
+                <el-button
+                  size="small"
+                  type="primary"
+                  @click="viewDetail(item)"
+                >
+                  查看详情
+                </el-button>
+              </div>
+            </div>
+          </el-card>
+        </div>
+
+        <!-- 桌面端表格布局 -->
+        <el-table
+          v-if="historyList.length > 0"
+          :data="historyList"
+          style="width: 100%"
+          class="desktop-table"
+        >
           <el-table-column prop="date" label="日期" width="180" />
-          <el-table-column prop="symptoms" label="症状描述" />
-          <el-table-column prop="result" label="诊断结果" />
+          <el-table-column
+            prop="symptoms"
+            label="症状描述"
+            show-overflow-tooltip
+          />
+          <el-table-column
+            prop="result"
+            label="诊断结果"
+            show-overflow-tooltip
+          />
           <el-table-column label="操作" width="180">
             <template #default="scope">
-              <el-button size="small" @click="viewDetail(scope.row)">查看详情</el-button>
-              <el-button size="small" type="danger" @click="deleteRecord(scope.row)">删除</el-button>
+              <el-button size="small" @click="viewDetail(scope.row)"
+                >查看详情</el-button
+              >
+              <el-button
+                size="small"
+                type="danger"
+                @click="deleteRecord(scope.row)"
+                >删除</el-button
+              >
             </template>
           </el-table-column>
         </el-table>
+
+        <div v-if="loading" class="loading-wrapper">
+          <el-skeleton :rows="3" animated />
+        </div>
       </el-main>
     </el-container>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { showToast, showConfirmDialog } from 'vant'
-import { diagnosisApi } from '../api/diagnosis'
-import { isMobile } from '../utils/mobile'
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { ElMessage, ElMessageBox } from "element-plus";
+import { Delete } from "@element-plus/icons-vue";
+import { diagnosisApi } from "../api/diagnosis";
 
-const router = useRouter()
-const isMobileDevice = ref(false)
-const historyList = ref([])
-const loading = ref(false)
-const finished = ref(false)
+const router = useRouter();
+const historyList = ref([]);
+const loading = ref(false);
 
 onMounted(async () => {
-  isMobileDevice.value = isMobile()
-  await loadHistory()
-})
+  await loadHistory();
+});
 
 const loadHistory = async () => {
-  if (loading.value) return
-  loading.value = true
+  if (loading.value) return;
+  loading.value = true;
   try {
-    const result = await diagnosisApi.getHistory()
-    historyList.value = result.data
-    finished.value = true
+    const result = await diagnosisApi.getHistory();
+    historyList.value = result.data;
   } catch (error) {
-    if (isMobileDevice.value) {
-      showToast.fail('加载历史记录失败')
-    } else {
-      ElMessage.error('加载历史记录失败')
-    }
-    console.error(error)
+    ElMessage.error("加载历史记录失败");
+    console.error(error);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 const viewDetail = (row) => {
-  router.push(`/diagnosis/${row.id}`)
-}
+  router.push(`/diagnosis/${row.id}`);
+};
 
 const deleteRecord = async (row) => {
   try {
-    if (isMobileDevice.value) {
-      await showConfirmDialog({
-        title: '确认删除',
-        message: '确定要删除这条记录吗？'
-      })
-    } else {
-      await ElMessageBox.confirm('确定要删除这条记录吗？', '确认删除', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-    }
-    
-    await diagnosisApi.deleteRecord(row.id)
-    if (isMobileDevice.value) {
-      showToast.success('删除成功')
-    } else {
-      ElMessage.success('删除成功')
-    }
-    historyList.value = historyList.value.filter(item => item.id !== row.id)
+    await ElMessageBox.confirm("确定要删除这条记录吗？", "确认删除", {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning",
+    });
+
+    await diagnosisApi.deleteRecord(row.id);
+    ElMessage.success("删除成功");
+    historyList.value = historyList.value.filter((item) => item.id !== row.id);
   } catch (error) {
-    if (error === 'cancel') return
-    if (isMobileDevice.value) {
-      showToast.fail('删除失败')
-    } else {
-      ElMessage.error('删除失败')
-    }
-    console.error(error)
+    if (error === "cancel") return;
+    ElMessage.error("删除失败");
+    console.error(error);
   }
-}
+};
 
 const goBack = () => {
-  router.push('/')
-}
+  router.push("/");
+};
 </script>
 
 <style scoped>
@@ -144,20 +150,7 @@ const goBack = () => {
   min-height: 100vh;
 }
 
-/* 移动端样式 */
-.mobile-layout {
-  padding-top: 46px;
-  padding-bottom: env(safe-area-inset-bottom);
-  background-color: var(--background-color);
-  min-height: 100vh;
-}
-
-.mobile-content {
-  padding: 0.3rem;
-}
-
-/* 桌面端样式 */
-.desktop-layout {
+.history-layout {
   min-height: 100vh;
 }
 
@@ -179,32 +172,94 @@ const goBack = () => {
   box-sizing: border-box;
 }
 
-.el-table {
+.empty-card {
+  text-align: center;
+}
+
+.mobile-list {
+  display: none;
+}
+
+.history-card {
+  margin-bottom: 16px;
+  cursor: pointer;
+}
+
+.card-content {
+  padding: 8px 0;
+}
+
+.card-header-mobile {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.date-text {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.symptoms-text {
+  font-size: 15px;
+  color: var(--text-primary);
+  line-height: 1.5;
+  margin-bottom: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.desktop-table {
   border: 1px solid var(--border-color);
 }
 
-.el-table th {
+.desktop-table th {
   background-color: var(--background-light);
+}
+
+.loading-wrapper {
+  margin-top: 20px;
 }
 
 /* 响应式 */
 @media screen and (max-width: 768px) {
-  .desktop-layout {
-    display: none;
+  .el-header {
+    padding: 0 16px;
   }
-  
+
   .el-main {
     padding: 16px;
+  }
+
+  .mobile-list {
+    display: block;
+  }
+
+  .desktop-table {
+    display: none;
+  }
+
+  .history-card {
+    border-radius: 12px;
   }
 }
 
 @media screen and (min-width: 769px) {
-  .mobile-layout {
+  .mobile-list {
     display: none;
   }
-  
-  .el-main {
-    padding: 24px;
+
+  .desktop-table {
+    display: table;
   }
 }
 
