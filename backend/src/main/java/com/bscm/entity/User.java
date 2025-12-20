@@ -17,14 +17,17 @@ public class User {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "username", length = 50)
+  @Column(name = "username", unique = true, nullable = false, length = 50)
   private String username;
 
   @Column(name = "password", nullable = false)
   private String password;
 
-  @Column(name = "phone", unique = true, nullable = false, length = 20)
+  @Column(name = "phone", length = 20)
   private String phone;
+
+  @Column(name = "role", nullable = false, length = 20)
+  private String role;
 
   @Column(name = "created_at", nullable = false, updatable = false)
   private LocalDateTime createdAt;
