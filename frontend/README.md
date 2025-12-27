@@ -1,4 +1,4 @@
-#CM项目
+bscm
 
 基于Vue3 + Vite构建的AI智能诊断前端应用。
 
