@@ -254,6 +254,7 @@ const goToHistory = () => {
   font-weight: 500;
   border-radius: 6px;
   transition: all 0.2s ease;
+  margin-left: 0 !important;
 }
 
 .hero-button:hover {

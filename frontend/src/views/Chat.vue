@@ -14,7 +14,10 @@
       <el-main class="chat-main" ref="chatMainRef">
         <div class="chat-messages" ref="messagesContainerRef">
           <!-- 欢迎消息 -->
-          <div class="message-item message-ai" v-if="messages.length === 0">
+          <div
+            class="message-wrapper message-ai-wrapper"
+            v-if="messages.length === 0"
+          >
             <div class="message-avatar">
               <el-icon><Avatar /></el-icon>
             </div>
@@ -23,18 +26,29 @@
                 您好！我是AI智能诊断助手，专注于脑干海绵状血管畸形的诊断咨询。我可以为您提供专业的医疗建议和解答相关问题。请问有什么可以帮助您的吗？
               </div>
             </div>
+            <div class="message-time">{{ formatTime(Date.now()) }}</div>
           </div>
 
           <!-- 消息列表 -->
           <div
             v-for="(message, index) in messages"
             :key="index"
-            class="message-item"
-            :class="message.role === 'user' ? 'message-user' : 'message-ai'"
+            class="message-wrapper"
+            :class="
+              message.role === 'user'
+                ? 'message-user-wrapper'
+                : 'message-ai-wrapper'
+            "
           >
+            <!-- AI消息：头像在左 -->
             <div class="message-avatar" v-if="message.role === 'assistant'">
               <el-icon><Avatar /></el-icon>
             </div>
+            <!-- 用户消息：时间在左 -->
+            <div class="message-time" v-if="message.role === 'user'">
+              {{ formatTime(message.timestamp) }}
+            </div>
+            <!-- 消息气泡 -->
             <div
               class="message-bubble"
               :class="
@@ -47,17 +61,19 @@
                 class="message-content"
                 v-html="formatMessage(message.content)"
               ></div>
-              <div class="message-time">
-                {{ formatTime(message.timestamp) }}
-              </div>
             </div>
+            <!-- 用户消息：头像在右 -->
             <div class="message-avatar" v-if="message.role === 'user'">
               <el-icon><User /></el-icon>
+            </div>
+            <!-- AI消息：时间在右 -->
+            <div class="message-time" v-if="message.role === 'assistant'">
+              {{ formatTime(message.timestamp) }}
             </div>
           </div>
 
           <!-- 加载指示器 -->
-          <div v-if="isLoading" class="message-item message-ai">
+          <div v-if="isLoading" class="message-wrapper message-ai-wrapper">
             <div class="message-avatar">
               <el-icon><Avatar /></el-icon>
             </div>
@@ -70,6 +86,7 @@
                 </span>
               </div>
             </div>
+            <div class="message-time">{{ formatTime(Date.now()) }}</div>
           </div>
         </div>
       </el-main>
@@ -252,7 +269,7 @@ onMounted(() => {
 <style scoped>
 .chat {
   min-height: 100vh;
-  background: var(--background-color);
+  background: #ededed;
 }
 
 .chat-layout {
@@ -264,11 +281,13 @@ onMounted(() => {
 
 /* 头部 */
 .header-section {
-  background: var(--primary-gradient);
+  background: var(--primary-color);
   color: white;
   padding: 0;
-  box-shadow: 0 2px 12px var(--shadow-color);
+  box-shadow: 0 2px 8px rgba(150, 120, 217, 0.2);
   height: 60px;
+  display: flex;
+  align-items: center;
 }
 
 .header-section :deep(.el-page-header__content) {
@@ -286,7 +305,7 @@ onMounted(() => {
 /* 聊天消息区域 */
 .chat-main {
   flex: 1;
-  padding: 16px;
+  padding: 10px 16px;
   overflow: hidden;
   background: #ededed;
 }
@@ -298,12 +317,14 @@ onMounted(() => {
   scroll-behavior: smooth;
 }
 
-/* 消息项 */
-.message-item {
+/* 消息包装器 - 微信风格 */
+.message-wrapper {
   display: flex;
   align-items: flex-start;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
   animation: fadeIn 0.3s ease-in;
+  position: relative;
+  width: 100%;
 }
 
 @keyframes fadeIn {
@@ -317,15 +338,27 @@ onMounted(() => {
   }
 }
 
-.message-user {
+.message-user-wrapper {
   justify-content: flex-end;
+  flex-direction: row;
 }
 
-.message-ai {
+.message-user-wrapper .message-bubble {
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.message-ai-wrapper {
   justify-content: flex-start;
+  flex-direction: row;
 }
 
-/* 头像 */
+.message-ai-wrapper .message-bubble {
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+/* 头像 - 微信风格圆形 */
 .message-avatar {
   width: 40px;
   height: 40px;
@@ -336,50 +369,53 @@ onMounted(() => {
   flex-shrink: 0;
   font-size: 20px;
   margin: 0 8px;
-}
-
-.message-user .message-avatar {
   background: var(--primary-color);
   color: white;
-  order: 2;
 }
 
-.message-ai .message-avatar {
-  background: white;
+.message-ai-wrapper .message-avatar {
+  background: var(--primary-lighter);
   color: var(--primary-color);
-  order: 0;
 }
 
-/* 消息气泡 */
+.message-user-wrapper .message-avatar {
+  background: var(--primary-color);
+  color: white;
+}
+
+/* 消息气泡 - 微信风格 */
 .message-bubble {
   max-width: 70%;
-  min-width: 80px;
+  min-width: 60px;
   position: relative;
   word-wrap: break-word;
   word-break: break-word;
+  padding: 10px 14px;
+  border-radius: 6px;
 }
 
+/* 用户消息气泡 - 右侧紫色 */
 .message-user-bubble {
   background: var(--primary-color);
   color: white;
-  border-radius: 8px 8px 0 8px;
-  padding: 12px 16px;
-  box-shadow: 0 2px 8px rgba(150, 120, 217, 0.2);
+  border-radius: 6px 6px 0 6px;
+  box-shadow: 0 1px 2px rgba(150, 120, 217, 0.3);
 }
 
+/* AI消息气泡 - 左侧浅紫色 */
 .message-ai-bubble {
-  background: white;
+  background: #f0e6ff;
   color: var(--text-primary);
-  border-radius: 8px 8px 8px 0;
-  padding: 12px 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 6px 6px 6px 0;
+  border: 1px solid rgba(150, 120, 217, 0.15);
+  box-shadow: 0 1px 2px rgba(150, 120, 217, 0.15);
 }
 
 /* 消息内容 */
 .message-content {
   font-size: 15px;
-  line-height: 1.6;
-  margin-bottom: 4px;
+  line-height: 1.5;
+  word-break: break-word;
 }
 
 .message-content :deep(strong) {
@@ -390,22 +426,27 @@ onMounted(() => {
   font-style: italic;
 }
 
-/* 时间戳 */
+.message-user-bubble .message-content {
+  color: white;
+}
+
+.message-ai-bubble .message-content {
+  color: var(--text-primary);
+}
+
+/* 时间戳 - 显示在消息旁边，微信风格 */
 .message-time {
-  font-size: 12px;
-  opacity: 0.6;
-  margin-top: 4px;
+  font-size: 11px;
+  color: #999;
+  align-self: flex-end;
+  margin: 0 4px;
+  white-space: nowrap;
+  padding-bottom: 4px;
+  line-height: 1;
+  flex-shrink: 0;
 }
 
-.message-user-bubble .message-time {
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.message-ai-bubble .message-time {
-  color: var(--text-secondary);
-}
-
-/* 打字指示器 */
+/* 打字指示器 - 紫色 */
 .typing-indicator {
   display: inline-flex;
   gap: 4px;
@@ -416,7 +457,7 @@ onMounted(() => {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--text-secondary);
+  background: var(--primary-color);
   animation: typing 1.4s infinite ease-in-out;
 }
 
@@ -437,21 +478,21 @@ onMounted(() => {
   60%,
   100% {
     transform: translateY(0);
-    opacity: 0.7;
+    opacity: 0.5;
   }
   30% {
-    transform: translateY(-10px);
+    transform: translateY(-8px);
     opacity: 1;
   }
 }
 
-/* 底部输入区域 */
+/* 底部输入区域 - 微信风格，紫色主题 */
 .chat-footer {
-  background: white;
-  border-top: 1px solid var(--border-color);
+  background: #ededed;
+  border-top: 1px solid rgba(150, 120, 217, 0.15);
   padding: 12px 16px;
   height: auto;
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 -1px 4px rgba(150, 120, 217, 0.08);
 }
 
 .input-container {
@@ -464,15 +505,22 @@ onMounted(() => {
 }
 
 .chat-input :deep(.el-textarea__inner) {
-  border: 1px solid var(--border-color);
+  border: 1px solid rgba(150, 120, 217, 0.3);
   border-radius: 8px;
   font-size: 15px;
   padding: 12px;
   resize: none;
+  background: white;
+  color: var(--text-primary);
 }
 
 .chat-input :deep(.el-textarea__inner:focus) {
   border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(150, 120, 217, 0.1);
+}
+
+.chat-input :deep(.el-textarea__inner::placeholder) {
+  color: #999;
 }
 
 .input-actions {
@@ -483,27 +531,36 @@ onMounted(() => {
 
 .char-count {
   font-size: 12px;
-  color: var(--text-secondary);
+  color: var(--primary-color);
 }
 
 .send-button {
   padding: 10px 24px;
   border-radius: 8px;
   font-weight: 500;
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.send-button:hover {
+  background: var(--primary-light);
+  border-color: var(--primary-light);
 }
 
 .send-button:disabled {
   opacity: 0.5;
+  background: var(--primary-color);
+  border-color: var(--primary-color);
 }
 
 /* 响应式设计 */
 @media screen and (max-width: 768px) {
   .chat-main {
-    padding: 12px;
+    padding: 8px 12px;
   }
 
   .message-bubble {
-    max-width: 80%;
+    max-width: 75%;
   }
 
   .message-avatar {
@@ -517,6 +574,10 @@ onMounted(() => {
     font-size: 14px;
   }
 
+  .message-time {
+    font-size: 10px;
+  }
+
   .chat-footer {
     padding: 10px 12px;
   }
@@ -527,7 +588,7 @@ onMounted(() => {
   }
 }
 
-/* 滚动条样式 */
+/* 滚动条样式 - 紫色 */
 .chat-messages::-webkit-scrollbar {
   width: 6px;
 }
